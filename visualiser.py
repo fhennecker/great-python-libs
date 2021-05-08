@@ -2,23 +2,24 @@ import plotly.express as px
 import streamlit as st
 import pandas as pd
 
-df = pd.read_csv("coucou.csv")
 
-st.title("Event explorer")
-show_organisers = st.sidebar.checkbox("Show organisers")
-text_filter = st.sidebar.text_input("Filter events based on title")
+st.title("Events explorer")
+
+text_filter = st.sidebar.text_input("Filter...")
+show_colors = st.sidebar.checkbox("Show colors")
 
 
-filtered = df[df.title.str.contains(text_filter, case=False)]
-st.text(
-    f"There are {len(filtered)} events with the word '{text_filter}' in their title"
-)
+df = pd.read_csv("events.csv")
+filtered_df = df[df.title.str.contains(text_filter, case=False)]
+
+st.text(f"There are {len(filtered_df)} events containing '{text_filter}'")
 
 args = {}
-if show_organisers:
+if show_colors:
     args["color"] = "organiser"
-graph = px.histogram(filtered, x="start_date", **args)
+graph = px.histogram(
+    filtered_df, x="start_datetime", title="C'était mieux avant", **args
+)
 graph
 
-
-filtered
+filtered_df
